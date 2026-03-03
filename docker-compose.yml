@@ -1,0 +1,13 @@
+version: '3.9'
+services:
+  web:
+    build: .
+    image: web-ide:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    # Uncomment the following lines for development with live reload:
+    # volumes:
+    #   - ./:/app
+    # command: npm run dev
