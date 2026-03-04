@@ -12,9 +12,8 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-# eliminar dependencias de desarrollo para reducir el artefacto final
-# (npm prune actúa sobre node_modules ya instalado)
-RUN npm prune --production
+# opcional: limpiar cache del builder
+RUN npm cache clean --force
 
 # etapa final más ligera para producción
 FROM node:18-alpine AS runner
@@ -22,11 +21,13 @@ FROM node:18-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
-# sólo traemos lo estrictamente necesario
+# copiamos artefactos de build
 COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
+
+# instalamos únicamente dependencias de producción
+RUN npm ci --production
 
 EXPOSE 3000
 CMD ["npm", "start"]
