@@ -12,6 +12,10 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
+# eliminar dependencias de desarrollo para reducir el artefacto final
+# (npm prune actúa sobre node_modules ya instalado)
+RUN npm prune --production
+
 # etapa final más ligera para producción
 FROM node:18-alpine AS runner
 
