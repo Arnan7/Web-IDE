@@ -12,9 +12,6 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-# opcional: limpiar cache del builder
-RUN npm cache clean --force
-
 # etapa final más ligera para producción
 FROM node:18-alpine AS runner
 
